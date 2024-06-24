@@ -1,11 +1,13 @@
-// Modifier par : SAID LAMGHARI
+// Modifier par SAID LAMGHARI
 export default function taskBlock(trueOrFalse) {
-  let task = false; // Utilisation de let pour une variable réassignée
-  let task2 = true; // Utilisation de let pour une variable réassignée
+  const task = false;
+  const task2 = true;
 
   if (trueOrFalse) {
-    let task = true; // Réaffectation de la variable task
-    let task2 = false; // Réaffectation de la variable task2
+    // eslint-disable-next-line no-unused-vars, no-shadow
+    const task = true; // Déclaration d'une nouvelle variable
+    // eslint-disable-next-line no-unused-vars, no-shadow
+    const task2 = false; // Déclaration d'une nouvelle variable
   }
 
   return [task, task2];
