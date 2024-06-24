@@ -4,8 +4,8 @@ export default function taskBlock(trueOrFalse) {
   let task2 = true; // Utilisation de let pour une variable réassignée
 
   if (trueOrFalse) {
-    task = true; // Réaffectation de la variable task
-    task2 = false; // Réaffectation de la variable task2
+    let task = true; // Réaffectation de la variable task
+    let task2 = false; // Réaffectation de la variable task2
   }
 
   return [task, task2];
