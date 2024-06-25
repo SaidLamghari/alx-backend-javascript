@@ -1,3 +1,4 @@
+// Modifier par SAID LAMGHARI
 // 8-getBudgetCurrentYear.js
 function getCurrentYear() {
   const date = new Date();
