@@ -4,8 +4,8 @@ export default class Currency {
   // Constructeur avec les attributs : code (String), name (String)
   constructor(code, name) {
     // Stockage des attributs avec un underscore préfixé
-    this._code = code; // Code de la devise (ex: '$')
-    this._name = name; // Nom de la devise (ex: 'Dollars')
+    this.code = code; // Code de la devise (ex: '$')
+    this.name = name; // Nom de la devise (ex: 'Dollars')
   }
 
   // Getter pour l'attribut code
