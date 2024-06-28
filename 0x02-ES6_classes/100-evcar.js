@@ -13,6 +13,16 @@ export default class EVCar extends Car {
     this._range = range;
   }
 
+  // test 1
+  get range() {
+    return this._range;
+  }
+
+  // test 2
+  set range(vl) {
+    this._range = vl;
+  }
+
   // Méthode pour cloner une instance de EVCar
   cloneCar() {
     // Créer et retourner une nouvelle instance de la classe parente Car
