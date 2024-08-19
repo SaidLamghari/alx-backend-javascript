@@ -1,17 +1,27 @@
-// Affiche un message de bienvenue et demande le nom de l'utilisateur.
+// File: 1-stdin.js
+// Auteur SAID LAMGHARI
+// Affiche un message de bienvenue
+// et demande le nom de l'utilisateur.
 process.stdout.write('Welcome to Holberton School, what is your name?\n');
 
-// Écoute les données entrantes depuis l'entrée standard (stdin).
-process.stdin.on('data', (data) => {
-  // Convertit les données reçues en chaîne de caractères et supprime les espaces blancs autour.
-  const name = data.toString().trim();
+// Écoute l'événement 'readable' sur l'entrée standard (stdin).
+process.stdin.on('readable', () => {
+  // Lit les données disponibles
+  // dans le flux d'entrée standard.
+  const databuffer = process.stdin.read();
 
-  // Affiche le nom de l'utilisateur.
-  process.stdout.write(`Your name is: ${name}\n`);
+  // Vérifie si des données ont été lues.
+  if (databuffer) {
+    // Affiche le nom de l'utilisateur (les données lues).
+    // 'databuffer' contient les données lues sous forme de buffer,
+    // donc elles sont directement utilisées ici.
+    process.stdout.write(`Your name is: ${databuffer}`);
+  }
+});
 
-  // Affiche un message indiquant que le logiciel se ferme.
+// Écoute l'événement 'end' sur l'entrée standard (stdin).
+process.stdin.on('end', () => {
+  // Affiche un message indiquant que
+  // le logiciel se ferme maintenant.
   process.stdout.write('This important software is now closing\n');
-
-  // Termine le processus avec un code de sortie 0 (succès).
-  process.exit();
 });
