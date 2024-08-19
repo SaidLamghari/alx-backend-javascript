@@ -1,26 +1,17 @@
-// Importation du module 'readline' qui permet de gérer les flux d'entrée et de sortie.
-// Ce module fournit une interface pour lire des lignes d'entrée depuis un flux de lecture.
-const readline = require('readline');
+// Affiche un message de bienvenue et demande le nom de l'utilisateur.
+process.stdout.write('Welcome to Holberton School, what is your name?\n');
 
-// Création d'une interface readline pour lire l'entrée depuis stdin (entrée standard)
-// et écrire les sorties sur stdout (sortie standard).
-const rl = readline.createInterface({
-  input: process.stdin, // Définir le flux d'entrée comme stdin (entrée standard du terminal)
-  output: process.stdout, // Définir le flux de sortie comme stdout (sortie standard du terminal)
-});
+// Écoute les données entrantes depuis l'entrée standard (stdin).
+process.stdin.on('data', (data) => {
+  // Convertit les données reçues en chaîne de caractères et supprime les espaces blancs autour.
+  const name = data.toString().trim();
 
-// Afficher le message de bienvenue et demander le nom de l'utilisateur
-console.log('Welcome to Holberton School, what is your name?');
+  // Affiche le nom de l'utilisateur.
+  process.stdout.write(`Your name is: ${name}\n`);
 
-// Écouter l'événement 'line' qui est émis lorsque l'utilisateur saisit une ligne de texte.
-// Le paramètre 'input' contient la ligne de texte saisie par l'utilisateur.
-rl.on('line', (input) => {
-  // Afficher le nom de l'utilisateur en utilisant le texte saisi
-  console.log(`Your name is: ${input}`);
+  // Affiche un message indiquant que le logiciel se ferme.
+  process.stdout.write('This important software is now closing\n');
 
-  // Afficher un message indiquant que le logiciel se ferme
-  console.log('This important software is now closing');
-
-  // Fermer l'interface readline. Cela termine le programme et libère les ressources.
-  rl.close();
+  // Termine le processus avec un code de sortie 0 (succès).
+  process.exit();
 });
