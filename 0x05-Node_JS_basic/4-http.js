@@ -1,25 +1,44 @@
-// Importer le module http de Node.js pour créer un serveur HTTP
+// Importer le module 'http' de Node.js
+// Auteur SAID LAMGHARI
 const http = require('http');
 
-// Créer un serveur HTTP
-const app = http.createServer((req, res) => {
+// Définir les constantes pour le port et l'hôte
+const PORT = 1245;
+const HOST = 'localhost';
+
+// Créer une instance de serveur HTTP
+const app = http.createServer();
+
+// Écouter l'événement 'request' sur le serveur
+// Ce callback est appelé chaque fois qu'une requête est reçue
+app.on('request', (_, res) => {
+  // Définir le texte de la réponse
+  const DisplaysText = 'Hello Holberton School!';
+
   // Définir les en-têtes de la réponse
-  // Le code de statut 200 indique que la demande a été traitée avec succès
-  // 'Content-Type': 'text/plain' spécifie que le type
-  // de contenu de la réponse est du texte brut
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  // 'Content-Type' spécifie le type de contenu comme du texte brut
+  res.setHeader('Content-Type', 'text/plain');
 
-  // Envoyer la réponse au client
-  // Le texte 'Hello Holberton School!\n' sera affiché dans le corps de la réponse
-  res.end('Hello Holberton School!\n');
+  // 'Content-Length' spécifie la longueur du corps de la réponse
+  res.setHeader('Content-Length', DisplaysText.length);
+
+  // Définir le code de statut HTTP comme 200 (OK)
+  res.statusCode = 200;
+
+  // Écrire le texte de la réponse dans le flux de sortie
+  // Utiliser Buffer.from() pour convertir le texte en tampon binaire
+  res.write(Buffer.from(DisplaysText));
+
+  // Terminer la réponse
+  res.end();
 });
 
-// Faire écouter le serveur sur le port 1245
-// Le message dans la fonction de rappel s'affiche lorsque
-// le serveur commence à écouter sur le port spécifié
-app.listen(1245, () => {
-  console.log('Server is listening on port 1245');
+// Démarrer le serveur et le faire écouter sur le port et l'hôte spécifiés
+app.listen(PORT, HOST, () => {
+  // Écrire un message dans le flux de sortie
+  // standard pour indiquer que le serveur écoute
+  process.stdout.write(`Server listening at -> http://${HOST}:${PORT}\n`);
 });
 
-// Exporter l'instance du serveur pour pouvoir la réutiliser dans d'autres modules
+// Exporter l'instance du serveur pour l'utiliser dans d'autres modules
 module.exports = app;
