@@ -1,7 +1,7 @@
 // Importation du contrôleur pour les routes générales
-const AppController = require('../controllers/AppController');
 // Importation du contrôleur pour les routes liées aux étudiants
-const StudentsController = require('../controllers/StudentsController');
+import AppController from '../controllers/AppController';
+import StudentsController from '../controllers/StudentsController';
 
 /**
  * Associe les routes aux gestionnaires appropriés dans l'application Express donnée.
