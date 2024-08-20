@@ -77,7 +77,7 @@ class StudentsController {
 
     // Vérifie si la spécialité demandée est valide
     if (!MAJRSFORVLD.includes(major)) {
-      response.status(400).send('Major parameter must be CS or SWE');
+      response.status(500).send('Major parameter must be CS or SWE');
       return;
     }
 
