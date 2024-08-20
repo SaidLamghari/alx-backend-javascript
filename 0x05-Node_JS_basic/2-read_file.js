@@ -1,16 +1,16 @@
 const fs = require('fs');
 
 /**
- * Lit un fichier CSV et compte le nombre d'étudiants, classés par domaine d'étude.
+ * Compte les étudiants dans un fichier CSV de données.
  *
- * Le fichier CSV est attendu au format suivant :
- * - La première ligne est l'en-tête avec des colonnes comprenant 'field' et 'firstname'.
- * - Les lignes suivantes contiennent les données des étudiants avec les champs et noms respectifs.
+ * Le fichier CSV doit avoir la première ligne comme en-tête avec les colonnes suivantes :
+ * - La dernière colonne doit être 'field' (le domaine d'étude de l'étudiant).
+ * - Les autres colonnes sont considérées comme les propriétés
+ * des étudiants (par exemple, 'firstname', 'lastname').
  *
- * @param {string} dtpth - Le chemin du fichier CSV à lire.
+ * @param {string} dtpth - Le chemin vers le fichier CSV contenant les données des étudiants.
  * @throws {Error} Lance une erreur avec le message 'Cannot load the database'
- * si le fichier ne peut pas être lu
- * ou si les colonnes requises sont manquantes.
+ * si le fichier n'existe pas ou n'est pas un fichier valide.
  *
  * @example
  * countStudents("database.csv");
@@ -19,71 +19,69 @@ const fs = require('fs');
  * // Number of students in CS: 6. List: Johann, Arielle, Jonathan, Emmanuel, Guillaume, Katie
  * // Number of students in SWE: 4. List: Guillaume, Joseph, Paul, Tommy
  */
-function countStudents(dtpth) {
-  try {
-    // Lire le contenu du fichier de manière synchrone
-    const data = fs.readFileSync(dtpth, 'utf8');
-
-    // Diviser le contenu du fichier en lignes, en éliminant les lignes vides
-    const lines = data.split('\n').filter((line) => line.trim() !== '');
-
-    // Vérifier si le fichier CSV est vide ou s'il n'a pas de données valides
-    if (lines.length < 2) {
-      // Si le fichier n'a pas assez de lignes, lancer une erreur
-      throw new Error('Cannot load the database');
-    }
-
-    // Extraire l'en-tête et les données des étudiants
-    const [header, ...students] = lines;
-
-    // Diviser l'en-tête en colonnes pour identifier les indices des champs
-    const headers = header.split(',');
-    const fieldIndex = headers.indexOf('field');
-    const nameIndex = headers.indexOf('firstname');
-
-    // Vérifier que les colonnes 'field' et 'firstname' existent
-    if (fieldIndex === -1 || nameIndex === -1) {
-      // Si l'une des colonnes est manquante, lancer une erreur
-      throw new Error('Cannot load the database');
-    }
-
-    // Initialiser une carte pour compter les étudiants par domaine
-    const fieldCounts = {};
-
-    // Traiter chaque enregistrement d'étudiant
-    students.forEach((student) => {
-      // Diviser chaque ligne d'étudiant en colonnes
-      const columns = student.split(',');
-
-      // Vérifier si la ligne contient le bon nombre de colonnes
-      if (columns.length !== headers.length) return; // Ignorer les lignes invalides
-
-      // Extraire le champ et le prénom de l'étudiant
-      const field = columns[fieldIndex].trim();
-      const name = columns[nameIndex].trim();
-
-      // Ajouter le prénom de l'étudiant à la liste du domaine correspondant
-      if (!fieldCounts[field]) {
-        fieldCounts[field] = [];
-      }
-      fieldCounts[field].push(name);
-    });
-
-    // Calculer le nombre total d'étudiants
-    const totalStudents = students.length;
-
-    // Afficher le nombre total d'étudiants
-    console.log(`Number of students: ${totalStudents}`);
-
-    // Afficher le nombre d'étudiants par domaine et la liste des prénoms
-    Object.keys(fieldCounts).forEach((field) => {
-      const names = fieldCounts[field];
-      console.log(`Number of students in ${field}: ${names.length}. List: ${names.join(', ')}`);
-    });
-  } catch (err) {
-    // Afficher une erreur si le fichier ne peut pas être chargé
-    console.error('Cannot load the database');
+const countStudents = (dtpth) => {
+  // Vérifier si le fichier existe
+  if (!fs.existsSync(dtpth)) {
+    throw new Error('Cannot load the database');
   }
-}
+
+  // Vérifier si le chemin correspond à un fichier
+  if (!fs.statSync(dtpth).isFile()) {
+    throw new Error('Cannot load the database');
+  }
+
+  // Lire le fichier CSV et diviser en lignes
+  const LgnesFichiers = fs
+    .readFileSync(dtpth, 'utf-8')
+    .trim()
+    .split('\n');
+
+  // Initialiser un objet pour stocker les groupes d'étudiants par domaine
+  const studentGps = {};
+
+  // Extraire les noms de colonnes de l'en-tête
+  const dbFeld = LgnesFichiers[0].split(',');
+  const studentNmes = dbFeld.slice(0, dbFeld.length - 1);
+
+  // Traiter chaque ligne d'étudiant (à partir de la ligne 1)
+  for (const line of LgnesFichiers.slice(1)) {
+    const dossierEtudiant = line.split(',');
+
+    // Vérifier si le nombre de colonnes correspond
+    if (dossierEtudiant.length === dbFeld.length) {
+      // Extraire les valeurs des propriétés et le domaine d'étude
+      const ValrsEtudiants = dossierEtudiant.slice(0, dossierEtudiant.length - 1);
+      const field = dossierEtudiant[dossierEtudiant.length - 1];
+
+      // Initialiser le groupe d'étudiants pour le domaine s'il n'existe pas
+      if (!studentGps[field]) {
+        studentGps[field] = [];
+      }
+
+      // Créer un objet étudiant avec les propriétés
+      const studentEntries = studentNmes
+        .map((prpNom, vIdex) => [prpNom, ValrsEtudiants[vIdex]]);
+
+      // Ajouter l'objet étudiant au groupe correspondant
+      studentGps[field].push(Object.fromEntries(studentEntries));
+    } else {
+      console.error('Invalid data format in file');
+    }
+  }
+
+  // Calculer le nombre total d'étudiants
+  const ttlStdents = Object
+    .values(studentGps)
+    .reduce((acc, group) => acc + group.length, 0);
+
+  // Afficher le nombre total d'étudiants
+  console.log(`Number of students: ${ttlStdents}`);
+
+  // Afficher le nombre d'étudiants par domaine et la liste des prénoms
+  for (const [field, group] of Object.entries(studentGps)) {
+    const NomEtudiant = group.map((student) => student.firstname).join(', ');
+    console.log(`Number of students in ${field}: ${group.length}. List: ${NomEtudiant}`);
+  }
+};
 
 module.exports = countStudents;
