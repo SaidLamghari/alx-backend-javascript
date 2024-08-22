@@ -1,46 +1,44 @@
 // 8-api/api.test.js
 
+
 const request = require('request');
 const { expect } = require('chai');
-const app = require('./api');
-// Importer l'application Express
-const port = 7865;
+const { exec } = require('child_process');
 
-// Définir l'URL de base pour les requêtes
-const baseUrl = `http://localhost:${port}`;
-
-describe('index page', () => {
-  // Variable pour stocker le serveur
+describe('Index page', function() {
   let server;
 
-  // Avant chaque test, démarrer le serveur
   before((done) => {
-    server = app.listen(port, done);
+    server = exec('node api.js', (error) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        done(error);
+      }
+    });
+    setTimeout(done, 1000); // wait for server to start
   });
 
-  // Après chaque test, arrêter le serveur
   after((done) => {
-    server.close(done);
+    server.kill('SIGINT');
+    done();
   });
 
-  it('should return status code 200', () => new Promise((done) => {
-    request.get(baseUrl, (err, res) => {
-      if (err) return done(err);
-      expect(res.statusCode).to.equal(200);
+  it('Correct status code?', (done) => {
+    request('http://localhost:7865', (error, response, body) => {
+      if (error) return done(error);
+      expect(response.statusCode).to.equal(200);
       done();
     });
-  }));
+  });
 
-  it('should return the correct message', () => new Promise((done) => {
-    request.get(baseUrl, (err, res, body) => {
-      if (err) return done(err);
+  it('Correct result?', (done) => {
+    request('http://localhost:7865', (error, response, body) => {
+      if (error) return done(error);
       expect(body).to.equal('Welcome to the payment system');
       done();
     });
-  }));
+  });
 
-  it('should handle other scenarios correctly', () => new Promise((done) => {
-    // Vous pouvez ajouter d'autres scénarios ici si nécessaire
-    done();
-  }));
+  // adddd
 });
+
