@@ -1,12 +1,12 @@
 {
   "name": "8-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "task 8 pour alx",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"
   },
-  "author": "",
+  "author": "SAID LAMGHARI",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1"
