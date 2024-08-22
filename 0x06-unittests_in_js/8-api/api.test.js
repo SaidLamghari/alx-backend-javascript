@@ -1,44 +1,26 @@
 // 8-api/api.test.js
-
-
-const request = require('request');
+// Importation de la fonction 'expect' de
+// la bibliothèque 'chai' pour les assertions
 const { expect } = require('chai');
-const { exec } = require('child_process');
+// Importation du module 'request' pour effectuer des requêtes HTTP
+const request = require('request');
 
-describe('Index page', function() {
-  let server;
 
-  before((done) => {
-    server = exec('node api.js', (error) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        done(error);
-      }
-    });
-    setTimeout(done, 1000); // wait for server to start
-  });
+// Définition d'un groupe de tests pour les intégrations API
+describe('API integration test', () => {
+  // URL de base pour l'API que nous allons tester
+  const API_LNK = 'http://localhost:7865';
 
-  after((done) => {
-    server.kill('SIGINT');
-    done();
-  });
-
-  it('Correct status code?', (done) => {
-    request('http://localhost:7865', (error, response, body) => {
-      if (error) return done(error);
-      expect(response.statusCode).to.equal(200);
+  // Déclaration du test pour vérifier la réponse de la route GET /
+  it('GET / returns correct response', (done) => {
+    // Effectuer une requête GET à la route racine de l'API
+    request.get(`${API_LNK}/`, (_err, rs, bdy) => {
+      // Vérifier que le code de statut HTTP est 200 (OK)
+      expect(rs.statusCode).to.be.equal(200);
+      // Vérifier que le corps de la réponse est le texte attendu
+      expect(bdy).to.be.equal('Welcome to the payment system');
+      // Indiquer que le test est terminé avec succès
       done();
     });
   });
-
-  it('Correct result?', (done) => {
-    request('http://localhost:7865', (error, response, body) => {
-      if (error) return done(error);
-      expect(body).to.equal('Welcome to the payment system');
-      done();
-    });
-  });
-
-  // adddd
 });
-
