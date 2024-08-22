@@ -1,27 +1,21 @@
 // Auteur SAID LAMGHARI
-// Importation de la fonction à tester
+// Importation de la fonction 'expect' depuis la bibliothèque 'chai' pour les assertions
 const { expect } = require('chai');
+// Importation de la fonction 'getPaymentTokenFromAPI' depuis le fichier '6-payment_token.js'
 const getPaymentTokenFromAPI = require('./6-payment_token');
-// Importation de la fonction 'expect' de la bibliothèque 'chai' pour les assertions
 
-// Définition du groupe de tests pour la fonction getPaymentTokenFromAPI
+// Définition d'un groupe de tests pour la fonction 'getPaymentTokenFromAPI'
 describe('getPaymentTokenFromAPI', () => {
   // Déclaration du test pour vérifier le comportement lorsque 'success' est true
-  it('should return a resolved promise with data when success is true', () => new Promise((done) => {
-    // Appeler la fonction getPaymentTokenFromAPI avec 'true' comme argument
-    getPaymentTokenFromAPI(true)
-      .then((response) => {
-        // Lorsque la promesse est résolue, vérifier que la réponse est correcte
-        // On s'attend à ce que la réponse soit un objet
-        // avec une clé 'data' et une valeur spécifique
-        expect(response).to.deep.equal({ data: 'Successful response from the API' });
-        // Indiquer que le test est terminé avec succès
-        done();
-      })
-      .catch((error) => {
-        // En cas d'erreur (promesse rejetée), échouer
-        // le test en passant l'erreur à 'done'
-        done(error);
-      });
-  }));
+  it('getPaymentTokenFromAPI(success), where success == true', async () => {
+    try {
+      // Appeler la fonction 'getPaymentTokenFromAPI' avec 'true' comme argument
+      const rpns = await getPaymentTokenFromAPI(true);
+      // Vérifier que la réponse est correcte
+      expect(rpns).to.deep.equal({ data: 'Successful response from the API' });
+    } catch (err) {
+      // Si une erreur est lancée, faire échouer le test
+      throw err;
+    }
+  });
 });
